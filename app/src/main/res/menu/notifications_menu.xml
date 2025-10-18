@@ -1,0 +1,12 @@
+<!-- res/menu/notifications_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/notif_1"
+        android:title="Notificação 1"/>
+    <item
+        android:id="@+id/notif_2"
+        android:title="Notificação 2"/>
+    <item
+        android:id="@+id/notif_3"
+        android:title="Notificação 3"/>
+</menu>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Cabeçalho -->
+    <item
+        android:id="@+id/nav_header"
+        android:title=""
+        android:enabled="false"
+        android:actionLayout="@layout/nav_header_layout" />
+
+    <!-- Grupo principal -->
+    <group android:id="@+id/group_main" android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_home"
+            android:title="Início"
+            android:icon="@drawable/ic_home"/>
+        <item
+            android:id="@+id/nav_NewSol"
+            android:title="Nova Solicitação"
+            android:icon="@drawable/ic_add"/>
+        <item
+            android:id="@+id/nav_ViewSol"
+            android:title="Minhas Solicitações"
+            android:icon="@drawable/ic_view"/>
+    </group>
+
+
+    <!-- Grupo secundário -->
+    <group android:id="@+id/group_secondary" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:title="Configurações"
+            android:icon="@drawable/ic_settings"/>
+        <item
+            android:id="@+id/nav_user"
+            android:title="Perfil"
+            android:icon="@drawable/ic_user"/>
+        <item
+            android:id="@+id/nav_Help"
+            android:title="Ajuda"
+            android:icon="@drawable/ic_help"/>
+    </group>
+
+    <!-- Grupo de saída -->
+    <group android:id="@+id/group_tertiary" android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Sair"
+            android:icon="@drawable/ic_view"/>
+    </group>
+
+</menu>

@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.HelpDeskUnipAssisMobile" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="hintTextColor">@color/hint_color</item>
+        <item name="colorControlNormal">@color/hint_color</item>
+        <item name="colorOnSurface">@color/hint_color</item>
+        <item name="colorPrimary">@color/hint_color</item>
+    </style>
+
+    <style name="Theme.HelpDeskUnipAssisMobile" parent="Base.Theme.HelpDeskUnipAssisMobile" />
+</resources>
