@@ -54,7 +54,8 @@
                 app:boxStrokeColor="@color/hint_color"
                 app:hintTextAppearance="@style/HintTextStyle"
                 app:endIconMode="password_toggle"
-                app:endIconDrawable="@drawable/ic_visibility">
+                app:endIconDrawable="@drawable/ic_visibility"
+                app:endIconTint="#C3C3C3">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextSenha"
@@ -91,17 +92,30 @@
                 app:icon="@drawable/ic_login"
                 android:background="@drawable/nav_drawer_bg" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progressLogin"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="ADMIN"
+                app:backgroundTint="#4A4A59"
+                android:textColor="#FFFFFF"
+                android:elevation="4dp"
+                app:iconGravity="textStart"
+                app:icon="@drawable/ic_login"
+                android:background="@drawable/nav_drawer_bg" />/>
+
+            <!-- Lottie Animation -->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieLoading"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginTop="30dp"
                 android:visibility="gone"
-                app:indicatorSize="48dp"
-                app:trackThickness="4dp"
-                app:indicatorColor="#40BCE2"
-                app:trackColor="#D9D9D9" />
+                app:lottie_rawRes="@raw/loadingtriangle"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="true" />
+
 
         </LinearLayout>
 

@@ -55,9 +55,10 @@
             android:background="@drawable/nav_drawer_bg"
             app:headerLayout="@layout/nav_header_layout"
             app:menu="@menu/drawer_menu"
-            app:itemTextAppearance="@style/NavigationViewItemText"
+            app:itemTextAppearance="@style/NavigationViewItemTextMenu"
             app:itemIconTint="@null"
-            app:itemTextColor="@null"
+            app:itemTextColor="@color/white"
+            app:itemBackground="@android:color/transparent"
             android:paddingTop="0dp" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

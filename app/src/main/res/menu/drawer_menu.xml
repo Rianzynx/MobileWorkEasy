@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Cabeçalho -->
-    <item
-        android:id="@+id/nav_header"
-        android:title=""
-        android:enabled="false"
-        android:actionLayout="@layout/nav_header_layout" />
 
     <!-- Grupo principal -->
     <group android:id="@+id/group_main" android:checkableBehavior="single">

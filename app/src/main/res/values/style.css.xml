@@ -6,11 +6,17 @@
     </style>
 
     <style name="NavigationViewItemText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">20sp</item> <!-- tamanho da fonte desejado -->
-        <item name="android:textColor">@color/nav_item_text_color</item> <!-- sua cor ou seletor -->
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/nav_item_text_color</item>
     </style>
 
     <style name="HintTextStyle" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textColor">@color/hint_color</item>
     </style>
+
+    <style name="NavigationViewItemTextMenu" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">16sp</item> <!-- aqui você define o tamanho -->
+        <item name="android:textColor">@color/white</item> <!-- opcional: cor do texto -->
+    </style>
+
 </resources>

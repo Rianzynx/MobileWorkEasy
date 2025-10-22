@@ -5,6 +5,7 @@
         <item name="colorControlNormal">@color/hint_color</item>
         <item name="colorOnSurface">@color/hint_color</item>
         <item name="colorPrimary">@color/hint_color</item>
+        <item name="android:statusBarColor">#0D192B</item>
     </style>
 
     <style name="Theme.HelpDeskUnipAssisMobile" parent="Base.Theme.HelpDeskUnipAssisMobile" />
