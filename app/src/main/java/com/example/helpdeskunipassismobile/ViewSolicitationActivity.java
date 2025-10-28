@@ -2,96 +2,98 @@ package com.example.helpdeskunipassismobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.helpdeskunipassismobile.model.SolicitacaoDTO;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ViewSolicitationActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SolicitationAdapter adapter;
-    private List<Solicitacao> solicitacaoList;
-    private TextView textEmpty;
+    private List<SolicitacaoDTO> solicitacaoList;
+
+    private LottieAnimationView lottieEmpty;
     private Spinner spinnerStatus, spinnerPrioridade;
+    private EditText editTextBusca;
+
+    private SolicitacaoApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_view_solicitation);
 
+        // Inicialização das views
         recyclerView = findViewById(R.id.recyclerViewSolicitacoes);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        textEmpty = findViewById(R.id.textEmpty);
+        lottieEmpty = findViewById(R.id.lottieEmpty);
         spinnerStatus = findViewById(R.id.spinnerStatus);
         spinnerPrioridade = findViewById(R.id.spinnerPrioridade);
-        SearchView searchView = findViewById(R.id.searchView);
+        editTextBusca = findViewById(R.id.editTextBusca);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Carregar dados iniciais
-        solicitacaoList = carregarSolicitacoes();
-        if (solicitacaoList == null) solicitacaoList = new ArrayList<>();
-
+        // Adapter e lista
+        solicitacaoList = new ArrayList<>();
         adapter = new SolicitationAdapter(solicitacaoList);
         recyclerView.setAdapter(adapter);
 
-        atualizarTextoVazio();
-
-        // Clique no item
         adapter.setOnItemClickListener(position -> {
-            Solicitacao s = adapter.getItem(position);
+            SolicitacaoDTO s = adapter.getItem(position);
             Intent intent = new Intent(ViewSolicitationActivity.this, SolicitationDetailActivity.class);
             intent.putExtra("titulo", s.getTitulo());
             intent.putExtra("status", s.getStatus());
             intent.putExtra("data", s.getData());
             intent.putExtra("prioridade", s.getPrioridade());
+            intent.putExtra("categoria", s.getCategoria());
+            intent.putExtra("descricao", s.getDescricao());
             startActivity(intent);
         });
 
-        // SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener(() -> new Handler(Looper.getMainLooper())
-                .postDelayed(() -> {
-                    solicitacaoList.clear();
-                    solicitacaoList.addAll(carregarSolicitacoes());
-                    adapter.updateList(solicitacaoList);
-                    swipeRefreshLayout.setRefreshing(false);
-                    atualizarTextoVazio();
-                }, 2000));
+        // Configuração dos filtros
+        configurarSpinners();
 
-        // Configura SearchView
-        TextView searchText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchText.setTextColor(getResources().getColor(R.color.black));
-        searchText.setHintTextColor(getResources().getColor(R.color.gray));
-
-        ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
-        searchIcon.setColorFilter(getResources().getColor(R.color.black));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // Configuração do EditText de busca
+        editTextBusca.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) { return false; }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText);
-                atualizarTextoVazio();
-                return true;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarLista();
             }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
-        // Spinners de filtro
+        // Pull to refresh
+        swipeRefreshLayout.setOnRefreshListener(this::carregarSolicitacoesDoServidor);
+
+        // Carrega os dados da API
+        carregarSolicitacoesDoServidor();
+    }
+
+    private void configurarSpinners() {
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 new String[]{"Todos", "Aberto", "Em andamento", "Finalizado"});
@@ -100,7 +102,7 @@ public class ViewSolicitationActivity extends BaseActivity {
 
         ArrayAdapter<String> prioridadeAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
-                new String[]{"Todos", "Alta", "Média", "Baixa"});
+                new String[]{"Todos", "Alta", "Media", "Baixa"});
         prioridadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPrioridade.setAdapter(prioridadeAdapter);
 
@@ -109,9 +111,7 @@ public class ViewSolicitationActivity extends BaseActivity {
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
                 filtrarLista();
             }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
         spinnerPrioridade.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
@@ -119,43 +119,80 @@ public class ViewSolicitationActivity extends BaseActivity {
             public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
                 filtrarLista();
             }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+        });
+    }
+
+    private void carregarSolicitacoesDoServidor() {
+        swipeRefreshLayout.setRefreshing(true);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://web-production-c1372.up.railway.app/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api = retrofit.create(SolicitacaoApi.class);
+
+        api.listarSolicitacoes().enqueue(new Callback<List<SolicitacaoDTO>>() {
+            @Override
+            public void onResponse(Call<List<SolicitacaoDTO>> call, Response<List<SolicitacaoDTO>> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    solicitacaoList.clear();
+                    solicitacaoList.addAll(response.body());
+                    filtrarLista();
+                } else {
+                    Toast.makeText(ViewSolicitationActivity.this,
+                            "Falha ao carregar dados: " + response.code(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
 
             @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            public void onFailure(Call<List<SolicitacaoDTO>> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(ViewSolicitationActivity.this,
+                        "Erro de rede: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
     private void filtrarLista() {
-        String statusFiltro = spinnerStatus.getSelectedItem().toString();
-        String prioridadeFiltro = spinnerPrioridade.getSelectedItem().toString();
+        String statusFiltro = spinnerStatus.getSelectedItem().toString().trim().toLowerCase();
+        String prioridadeFiltro = spinnerPrioridade.getSelectedItem().toString().trim().toLowerCase();
+        String queryFiltro = editTextBusca.getText().toString().trim().toLowerCase();
 
-        List<Solicitacao> filtradas = new ArrayList<>();
-        for (Solicitacao s : solicitacaoList) {
-            boolean statusOk = statusFiltro.equals("Todos") || s.getStatus().equalsIgnoreCase(statusFiltro);
-            boolean prioridadeOk = prioridadeFiltro.equals("Todos") || s.getPrioridade().equalsIgnoreCase(prioridadeFiltro);
+        List<SolicitacaoDTO> filtradas = new ArrayList<>();
+        for (SolicitacaoDTO s : solicitacaoList) { // SEMPRE usa a lista original
+            String statusItem = s.getStatus() != null ? s.getStatus().trim().toLowerCase() : "";
+            String prioridadeItem = s.getPrioridade() != null ? s.getPrioridade().trim().toLowerCase() : "";
+            String tituloItem = s.getTitulo() != null ? s.getTitulo().trim().toLowerCase() : "";
 
-            if (statusOk && prioridadeOk) filtradas.add(s);
+            boolean statusOk = statusFiltro.equals("todos") || statusItem.equals(statusFiltro);
+            boolean prioridadeOk = prioridadeFiltro.equals("todos") || prioridadeItem.equals(prioridadeFiltro);
+            boolean buscaOk = tituloItem.contains(queryFiltro);
+
+            if (statusOk && prioridadeOk && buscaOk) {
+                filtradas.add(s);
+            }
         }
+
         adapter.updateList(filtradas);
         atualizarTextoVazio();
     }
 
-    private void atualizarTextoVazio() {
-        textEmpty.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-    }
 
-    private List<Solicitacao> carregarSolicitacoes() {
-        List<Solicitacao> list = new ArrayList<>();
-        list.add(new Solicitacao("Solicitação de férias", "Aberto", "01/10/2025", "Alta"));
-        list.add(new Solicitacao("Atualização de dados cadastrais", "Em andamento", "02/10/2025", "Média"));
-        list.add(new Solicitacao("Pedido de vale-transporte", "Finalizado", "03/10/2025", "Baixa"));
-        list.add(new Solicitacao("Solicitação de atestado médico", "Aberto", "04/10/2025", "Alta"));
-        list.add(new Solicitacao("Alteração de banco para pagamento", "Em andamento", "05/10/2025", "Média"));
-        list.add(new Solicitacao("Reclamação sobre ambiente de trabalho", "Aberto", "06/10/2025", "Alta"));
-        list.add(new Solicitacao("Solicitação de treinamento", "Finalizado", "07/10/2025", "Média"));
-        list.add(new Solicitacao("Pedido de adiantamento salarial", "Aberto", "08/10/2025", "Alta"));
-        list.add(new Solicitacao("Atualização de benefícios", "Em andamento", "09/10/2025", "Média"));
-        list.add(new Solicitacao("Cancelamento de plano de saúde", "Finalizado", "10/10/2025", "Baixa"));
-        return list;
+    private void atualizarTextoVazio() {
+        boolean vazio = adapter.getItemCount() == 0;
+
+        if (vazio) {
+            lottieEmpty.setAlpha(0f);
+            lottieEmpty.setVisibility(View.VISIBLE);
+            lottieEmpty.animate().alpha(1f).setDuration(300).start();
+        } else {
+            lottieEmpty.animate().alpha(0f).setDuration(300).withEndAction(() ->
+                    lottieEmpty.setVisibility(View.GONE)).start();
+        }
     }
 }

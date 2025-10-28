@@ -36,10 +36,10 @@
                 app:hintTextAppearance="@style/HintTextStyle" >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEmail"
+                    android:id="@+id/editTextCpf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Digite seu email"
+                    android:hint="Digite seu CPF"
                     android:importantForAutofill="yes"
                     android:inputType="textEmailAddress"
                     />

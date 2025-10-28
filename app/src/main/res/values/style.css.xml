@@ -19,4 +19,14 @@
         <item name="android:textColor">@color/white</item> <!-- opcional: cor do texto -->
     </style>
 
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+    </style>
+
+    <style name="ToolbarTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+
 </resources>

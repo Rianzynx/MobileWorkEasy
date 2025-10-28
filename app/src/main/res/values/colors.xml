@@ -10,4 +10,13 @@
     <color name="darkgray">#494949</color>
     <color name="cian">#40BCE2</color>
     <color name="nav_header_bg">#131E31</color>
+    <color name="cian_light">#B2EBF2</color>
+    <color name="red_light">#FFCDD2</color>
+    <color name="gray_light">#E0E0E0</color>
+    <color name="gray_dark">#616161</color>
+    <color name="background_light">#F9FAFB</color>
+    <color name="prioridade_alta">#D32012</color>
+    <color name="prioridade_media">#FF7700</color>
+    <color name="prioridade_baixa">#11DE19</color>
+
 </resources>

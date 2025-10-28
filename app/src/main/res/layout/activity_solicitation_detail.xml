@@ -1,93 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="#FFFFFF">
 
-    <LinearLayout
+    <!-- Barra superior com TextView para título -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarDetalhes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="56dp"
+        android:background="#FFFFFF">
 
-        <!-- Título -->
+        <!-- Título centralizado -->
         <TextView
-            android:id="@+id/textTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Título da Solicitação"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Status -->
-        <TextView
-            android:id="@+id/textStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Status: Aberto"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Data -->
-        <TextView
-            android:id="@+id/textData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Data: 01/10/2025"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="12dp" />
-
-        <!-- Prioridade -->
-        <TextView
-            android:id="@+id/textPrioridade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Prioridade: Alta"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Descrição / detalhes extras -->
-        <TextView
-            android:id="@+id/textDescricao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Descrição detalhada da solicitação..."
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Seção de anexos -->
-        <TextView
-            android:id="@+id/textAnexosLabel"
+            android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Anexos:"
-            android:textSize="16sp"
+            android:text="Detalhes da Solicitação"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            android:textColor="@color/darkgray"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_gravity="center" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewAnexos"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:scrollbars="horizontal"
-            android:layout_marginBottom="24dp" />
+    <!-- Conteúdo principal -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:padding="20dp"
+        android:scrollbars="none">
 
-        <!-- Botão de ação -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFechar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Voltar"
-            android:backgroundTint="@color/cian"
-            android:textColor="@color/white" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <!-- Card principal -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/gray_light"
+                android:backgroundTint="@android:color/white">
 
-</ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Título -->
+                    <TextView
+                        android:id="@+id/textTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Título da Solicitação"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/darkgray"
+                        android:fontFamily="@font/poppins_bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Chips de Status e Prioridade -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Aberto"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/poppins_regular"
+                            app:chipBackgroundColor="#20F0C0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPrioridade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Alta"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/poppins_regular"
+                            app:chipBackgroundColor="@color/red_light"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Categoria -->
+                    <TextView
+                        android:id="@+id/textCategoria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Categoria: Treinamento"
+                        android:textSize="16sp"
+                        android:textColor="@color/gray_dark"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Data -->
+                    <TextView
+                        android:id="@+id/textData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Data: 01/10/2025"
+                        android:textSize="15sp"
+                        android:textColor="@color/gray_dark"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Descrição -->
+                    <TextView
+                        android:id="@+id/textDescricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Descrição detalhada da solicitação..."
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Anexos -->
+            <TextView
+                android:id="@+id/textAnexosLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anexos"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/darkgray"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAnexos"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Botão -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFechar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Voltar"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconGravity="textStart"
+                android:backgroundTint="@color/cian"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

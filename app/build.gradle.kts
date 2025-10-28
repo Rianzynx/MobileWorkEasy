@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.helpdeskunipassismobile"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.helpdeskunipassismobile"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -33,15 +33,20 @@ android {
 }
 
 dependencies {
-    // UI base
+    // UI
     implementation(libs.appcompat)
-    implementation(libs.material)
+    implementation(libs.material3)
     implementation(libs.recyclerview)
-    implementation(libs.appcompat)
     implementation(libs.swiperefreshlayout)
+
+    // Animações
     implementation("com.airbnb.android:lottie:6.6.10")
 
-    // Retrofit + Gson + OkHttp (logging)
+    // Fonts
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.core:core-ktx:1.12.0")
+
+    // Retrofit + Gson + OkHttp
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)

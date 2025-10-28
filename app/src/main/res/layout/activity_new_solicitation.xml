@@ -5,51 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".NewSolicitationActivity">
+    tools:context=".NewSolicitationActivity"
+    android:background="#FFFFFF">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
-        <!-- Título da tela -->
         <TextView
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/poppins_bold"
             android:text="Nova Solicitação"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:textColor="@color/darkgray"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-        <!-- Título label -->
+        <TextView
+            android:id="@+id/textViewCategoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Categoria"
+            android:textColor="@color/darkgray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_bold" />
+
+        <Spinner
+            android:id="@+id/spinnerCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="12dp"
+            android:background="#e3e3e3" />
+
         <TextView
             android:id="@+id/textViewTituloLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Título"
-            android:textColor="#434242"
+            android:textColor="@color/darkgray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/textViewTitle"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:fontFamily="@font/poppins_bold" />
 
-        <!-- Campo Título -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutTitulo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewTituloLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeColor="#40BCE2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextTitulo"
@@ -58,32 +72,28 @@
                 android:background="@drawable/edit_text"
                 android:inputType="textPersonName"
                 android:padding="12dp"
-                android:hint="Digite o título" />
+                android:textColor="#2C3E50"
+                android:fontFamily="@font/poppins_regular" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Descrição label -->
         <TextView
             android:id="@+id/textViewDescricaoLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Descrição"
-            android:textColor="#434242"
+            android:textColor="@color/darkgray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutTitulo"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:fontFamily="@font/poppins_bold" />
 
-        <!-- Campo Descrição -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutDescricao"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewDescricaoLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeColor="#40BCE2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextDescricao"
@@ -93,180 +103,158 @@
                 android:padding="12dp"
                 android:inputType="textMultiLine"
                 android:gravity="top"
-                android:hint="Descreva sua solicitação" />
+                android:textColor="#2C3E50"
+                android:fontFamily="@font/poppins_regular" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Observações label -->
         <TextView
             android:id="@+id/textViewObservacoesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Observações"
-            android:textColor="#434242"
+            android:textColor="@color/darkgray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutDescricao"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:fontFamily="@font/poppins_bold" />
 
-        <!-- Campo Observações -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutObservacoes"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewObservacoesLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:boxStrokeWidth="2dp"
+            app:boxStrokeColor="#40BCE2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextObservacoes"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:background="@drawable/edit_text"
                 android:padding="12dp"
                 android:inputType="textMultiLine"
                 android:gravity="top"
-                android:hint="Observações adicionais (opcional)" />
+                android:textColor="#2C3E50"
+                android:fontFamily="@font/poppins_regular" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Categoria label -->
-        <TextView
-            android:id="@+id/textViewCategoria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Categoria"
-            android:textColor="#434242"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutObservacoes"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Spinner Categoria -->
-        <Spinner
-            android:id="@+id/spinnerCategoria"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:background="#e3e3e3"
-            app:layout_constraintTop_toBottomOf="@id/textViewCategoria"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Data label -->
-        <TextView
-            android:id="@+id/textViewData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Data"
-            android:textColor="#434242"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/spinnerCategoria"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- Campo Data -->
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_date"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Selecione a data"
-            android:padding="12dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewData"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Prioridade label -->
         <TextView
             android:id="@+id/textViewPrioridade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Prioridade"
-            android:textColor="#434242"
+            android:textColor="@color/darkgray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/textDate"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:fontFamily="@font/poppins_bold" />
 
-        <!-- Spinner Prioridade -->
         <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="0dp"
+            android:id="@+id/spinnerPrioridade"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="12dp"
-            android:background="#e3e3e3"
-            app:layout_constraintTop_toBottomOf="@id/textViewPrioridade"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:background="#e3e3e3" />
 
-        <!-- Anexos label -->
+        <TextView
+            android:id="@+id/textViewData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Data"
+            android:textColor="@color/darkgray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecione a data"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_calendar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="12dp"
+                android:fontFamily="@font/poppins_regular" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/textViewAnexos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Anexos"
-            android:textColor="#434242"
+            android:textColor="@color/darkgray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/spinner"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:fontFamily="@font/poppins_bold" />
 
-        <!-- Ícones lado a lado -->
-        <ImageView
-            android:id="@+id/imageViewAnex"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewAnexos"
-            app:layout_constraintStart_toStartOf="parent"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/outline_attach_file_24" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:gravity="start">
 
-        <ImageView
-            android:id="@+id/imageViewImage"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewAnexos"
-            app:layout_constraintStart_toEndOf="@id/imageViewAnex"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/baseline_image_24" />
+            <ImageView
+                android:id="@+id/imageViewAnex"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/outline_attach_file_24"
+                android:contentDescription="Anexo" />
 
-        <ImageView
-            android:id="@+id/imageViewCam"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewAnexos"
-            app:layout_constraintStart_toEndOf="@id/imageViewImage"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/baseline_camera_alt_24" />
+            <ImageView
+                android:id="@+id/imageViewImage"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/baseline_image_24"
+                android:contentDescription="Imagem" />
 
-        <!-- Botão Enviar -->
+            <ImageView
+                android:id="@+id/imageViewCam"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/baseline_camera_alt_24"
+                android:contentDescription="Câmera" />
+        </LinearLayout>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_send_animation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            app:lottie_rawRes="@raw/send_animation"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            android:visibility="gone" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSubmit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="53dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="54dp"
+            android:backgroundTint="#40BCE2"
             android:text="Enviar"
-            app:backgroundTint="#40BCE2"
-            app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/imageViewAnex"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textColor="#ffffff"
+            android:fontFamily="@font/poppins_regular" />
+    </LinearLayout>
 </ScrollView>

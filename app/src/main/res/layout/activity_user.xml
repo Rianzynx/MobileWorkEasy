@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF8F8">
+    android:background="#FFF8F8"
+    android:padding="16dp">
 
     <!-- Imagem do usuário -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageUser"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="150dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,10 +24,11 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/aclonica"
         android:text="RIAN ALVES"
-        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/imageUser"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,127 +39,112 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="Suporte"
+        android:textColor="#666"
+        android:textSize="16sp"
+        android:fontFamily="@font/poppins_regular"
         app:layout_constraintTop_toBottomOf="@id/textView6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Label: E-mail -->
-    <TextView
-        android:id="@+id/textViewEmailLabel"
-        android:layout_width="wrap_content"
+    <!-- Container dos campos -->
+    <LinearLayout
+        android:id="@+id/containerCampos"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="24dp"
-        android:text="E-mail"
-        android:textColor="#767272"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/textView7"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Campo: E-mail -->
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="4dp"
-        android:hint="usuario@email.com"
-        android:textColorHint="#000000"
-        android:enabled="false"
-        android:focusable="false"
-        android:cursorVisible="false"
-        android:backgroundTint="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@id/textViewEmailLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Label: Endereço -->
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:text="Endereço"
-        android:textColor="#767272"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail"
-        app:layout_constraintStart_toStartOf="parent" />
+        <!-- Label e campo: E-mail -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E-mail"
+            android:textColor="#666"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/poppins_regular"/>
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:text="rian@yahoo.com"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/darker_gray"
+            android:fontFamily="@font/poppins_regular"/>
 
-    <!-- Campo: Endereço -->
-    <EditText
-        android:id="@+id/editTextEmail3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="4dp"
-        android:hint="Rua A"
-        android:textColorHint="#000000"
-        android:enabled="false"
-        android:focusable="false"
-        android:cursorVisible="false"
-        app:layout_constraintTop_toBottomOf="@id/textView10"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Label e campo: Endereço -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Endereço"
+            android:textColor="#666"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/poppins_regular"/>
+        <EditText
+            android:id="@+id/editTextEmail3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:text="Rua A, 123"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/darker_gray"
+            android:fontFamily="@font/poppins_regular"/>
 
-    <!-- Label: Telefone -->
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:text="Telefone"
-        android:textColor="#767272"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail3"
-        app:layout_constraintStart_toStartOf="parent" />
+        <!-- Label e campo: Telefone -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Telefone"
+            android:textColor="#666"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/poppins_regular"/>
+        <EditText
+            android:id="@+id/editTextEmail4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:text="(14) 99800-0000"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/darker_gray"
+            android:fontFamily="@font/poppins_regular"/>
 
-    <!-- Campo: Telefone -->
-    <EditText
-        android:id="@+id/editTextEmail4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="4dp"
-        android:hint="(14)99800-0000"
-        android:textColorHint="#000000"
-        android:enabled="false"
-        android:focusable="false"
-        android:cursorVisible="false"
-        app:layout_constraintTop_toBottomOf="@id/textView11"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Label e campo: Data de nascimento -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data de Nascimento"
+            android:textColor="#666"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/poppins_regular"/>
+        <EditText
+            android:id="@+id/editTextEmail5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:text="01/01/2001"
+            android:textColor="@color/black"
+            android:backgroundTint="@android:color/darker_gray"
+            android:fontFamily="@font/poppins_regular"/>
 
-    <!-- Label: Data de nascimento -->
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:text="Data de Nascimento"
-        android:textColor="#767272"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail4"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Campo: Data de nascimento -->
-    <EditText
-        android:id="@+id/editTextEmail5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="4dp"
-        android:hint="01/01/2001"
-        android:textColorHint="#000000"
-        android:enabled="false"
-        android:focusable="false"
-        android:cursorVisible="false"
-        app:layout_constraintTop_toBottomOf="@id/textView12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
