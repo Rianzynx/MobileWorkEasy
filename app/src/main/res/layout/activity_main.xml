@@ -19,32 +19,49 @@
             android:padding="24dp"
             android:gravity="center_horizontal">
 
+            <!-- Lottie fundo -->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieHome"
+                android:layout_width="210dp"
+                android:layout_height="210dp"
+                android:layout_marginTop="0dp"
+                android:alpha="0.3"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/globe_login" />
+
+            <!-- Logo -->
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="200dp"
-                android:layout_height="150dp"
+                android:layout_width="210dp"
+                android:layout_height="160dp"
+                android:layout_marginTop="-180dp"
                 app:srcCompat="@drawable/logoteste"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true" />
 
+            <!-- Campo CPF -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
                 app:boxBackgroundMode="outline"
                 app:hintTextColor="@color/hint_color"
                 app:boxStrokeColor="@color/hint_color"
-                app:hintTextAppearance="@style/HintTextStyle" >
+                app:startIconDrawable="@drawable/ic_email"
+                app:startIconTint="@color/hint_color"
+                android:layout_marginTop="80dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextCpf"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Digite seu CPF"
-                    android:importantForAutofill="yes"
                     android:inputType="textEmailAddress"
-                    />
+                    android:paddingStart="50dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo Senha -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,9 +69,9 @@
                 app:boxBackgroundMode="outline"
                 app:hintTextColor="@color/hint_color"
                 app:boxStrokeColor="@color/hint_color"
-                app:hintTextAppearance="@style/HintTextStyle"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="@color/hint_color"
                 app:endIconMode="password_toggle"
-                app:endIconDrawable="@drawable/ic_visibility"
                 app:endIconTint="#C3C3C3">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -62,11 +79,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Digite sua senha"
-                    android:importantForAutofill="yes"
-                    android:inputType="textPassword" />
-
+                    android:inputType="textPassword"
+                    android:paddingStart="50dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Esqueceu a senha -->
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
@@ -79,46 +98,45 @@
                 android:clickable="true"
                 android:focusable="true" />
 
+            <!-- Botão LOGIN -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="35dp"
                 android:text="LOGIN"
-                app:backgroundTint="#40BCE2"
                 android:textColor="#FFFFFF"
-                android:elevation="4dp"
-                app:iconGravity="textStart"
+                app:backgroundTint="#40BCE2"
                 app:icon="@drawable/ic_login"
+                app:iconGravity="textStart"
+                android:elevation="4dp"
                 android:background="@drawable/nav_drawer_bg" />
 
+            <!-- Botão ADMIN -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAdmin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="ADMIN"
-                app:backgroundTint="#4A4A59"
                 android:textColor="#FFFFFF"
-                android:elevation="4dp"
-                app:iconGravity="textStart"
+                app:backgroundTint="#4A4A59"
                 app:icon="@drawable/ic_login"
-                android:background="@drawable/nav_drawer_bg" />/>
+                app:iconGravity="textStart"
+                android:elevation="4dp"
+                android:background="@drawable/nav_drawer_bg" />
 
-            <!-- Lottie Animation -->
+            <!-- Lottie carregando -->
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottieLoading"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_marginTop="30dp"
                 android:visibility="gone"
-                app:lottie_rawRes="@raw/loadingtriangle"
                 app:lottie_autoPlay="false"
-                app:lottie_loop="true" />
-
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loadingtriangle" />
 
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

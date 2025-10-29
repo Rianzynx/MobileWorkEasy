@@ -1,13 +1,10 @@
 package com.example.helpdeskunipassismobile;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 
 public class SolicitationDetailActivity extends BaseActivity {
@@ -26,31 +23,7 @@ public class SolicitationDetailActivity extends BaseActivity {
         TextView categoria = findViewById(R.id.textCategoria);
         TextView descricao = findViewById(R.id.textDescricao);
         TextView data = findViewById(R.id.textData);
-
-        // Verificando se as views existem
-        if (titulo == null) {
-            Log.e(TAG, "TextView textTitulo não encontrada!");
-        }
-
-        if (status == null) {
-            Log.e(TAG, "Chip chipStatus não encontrado!");
-        }
-
-        if (prioridade == null) {
-            Log.e(TAG, "Chip chipPrioridade não encontrado!");
-        }
-
-        if (categoria == null) {
-            Log.e(TAG, "TextView textCategoria não encontrada!");
-        }
-
-        if (descricao == null) {
-            Log.e(TAG, "TextView textDescricao não encontrada!");
-        }
-
-        if (data == null) {
-            Log.e(TAG, "TextView textData não encontrada!");
-        }
+        TextView observacao = findViewById(R.id.textObservacao);
 
         // Recebendo dados do Intent
         String tituloText = getIntent().getStringExtra("titulo");
@@ -59,49 +32,18 @@ public class SolicitationDetailActivity extends BaseActivity {
         String prioridadeText = getIntent().getStringExtra("prioridade");
         String categoriaText = getIntent().getStringExtra("categoria");
         String descricaoText = getIntent().getStringExtra("descricao");
+        String observacaoText = getIntent().getStringExtra("observacoes");
 
-        // Configurando os textos das views
-        if (titulo != null && tituloText != null && !tituloText.isEmpty()) {
-            titulo.setText(tituloText);
-        } else {
-            titulo.setText("Título não disponível");
-        }
+        // Configurando os textos
+        titulo.setText((tituloText != null && !tituloText.isEmpty()) ? tituloText : "Título não disponível");
+        status.setText((statusText != null && !statusText.isEmpty()) ? statusText : "Status não disponível");
+        data.setText((dataText != null && !dataText.isEmpty()) ? dataText : "Data não disponível");
+        categoria.setText((categoriaText != null && !categoriaText.isEmpty()) ? "Categoria: " + categoriaText : "Categoria: Não informada");
+        descricao.setText((descricaoText != null && !descricaoText.isEmpty()) ? descricaoText : "Descrição não disponível");
+        observacao.setText((observacaoText != null && !observacaoText.isEmpty()) ? observacaoText : "Nenhuma observação disponível");
 
-        if (status != null && statusText != null && !statusText.isEmpty()) {
-            status.setText(statusText);
-        } else {
-            status.setText("Status não disponível");
-        }
-
-        if (data != null && dataText != null && !dataText.isEmpty()) {
-            data.setText(dataText);
-        } else {
-            data.setText("Data não disponível");
-        }
-
-        if (prioridade != null && prioridadeText != null && !prioridadeText.isEmpty()) {
-            prioridade.setText(prioridadeText);
-        } else {
-            prioridade.setText("Prioridade não informada");
-        }
-
-        if (categoria != null) {
-            if (categoriaText != null && !categoriaText.isEmpty()) {
-                categoria.setText("Categoria: " + categoriaText);
-            } else {
-                categoria.setText("Categoria: Não informada");
-            }
-        }
-
-        if (descricao != null) {
-            if (descricaoText != null && !descricaoText.isEmpty()) {
-                descricao.setText(descricaoText);
-            } else {
-                descricao.setText("Descrição não disponível");
-            }
-        }
-
-        if (prioridade != null && prioridadeText != null) {
+        // Cor do chip de prioridade
+        if (prioridadeText != null) {
             switch (prioridadeText.toLowerCase()) {
                 case "alta":
                     prioridade.setChipBackgroundColorResource(R.color.prioridade_alta);
@@ -113,12 +55,13 @@ public class SolicitationDetailActivity extends BaseActivity {
                     prioridade.setChipBackgroundColorResource(R.color.prioridade_baixa);
                     break;
                 default:
-                    prioridade.setChipBackgroundColorResource(R.color.gray);  // Cor padrão
+                    prioridade.setChipBackgroundColorResource(R.color.gray);
                     break;
             }
+            prioridade.setText(prioridadeText);
         }
 
-        // Configurando o botão de voltar
+        // Botão voltar
         Button btnVoltar = findViewById(R.id.btnFechar);
         if (btnVoltar != null) {
             btnVoltar.setOnClickListener(v -> finish());

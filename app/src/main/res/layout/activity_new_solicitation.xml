@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".NewSolicitationActivity"
-    android:background="#FFFFFF">
+    android:background="@android:color/white"
+    tools:context=".NewSolicitationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,6 +17,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
+        <!-- TÍTULO -->
         <TextView
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
@@ -25,236 +26,294 @@
             android:fontFamily="@font/poppins_bold"
             android:text="Nova Solicitação"
             android:textColor="@color/darkgray"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textViewCategoria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Categoria"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
-
-        <Spinner
-            android:id="@+id/spinnerCategoria"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:background="#e3e3e3" />
-
-        <TextView
-            android:id="@+id/textViewTituloLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Título"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutTitulo"
+        <!-- CARD PRINCIPAL -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="#40BCE2">
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:strokeWidth="0dp"
+            android:backgroundTint="@android:color/white">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextTitulo"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_text"
-                android:inputType="textPersonName"
-                android:padding="12dp"
-                android:textColor="#2C3E50"
-                android:fontFamily="@font/poppins_regular" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
 
-        <TextView
-            android:id="@+id/textViewDescricaoLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Descrição"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
+                <!-- CATEGORIA -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categoria"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutDescricao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="#40BCE2">
+                <Spinner
+                    android:id="@+id/spinnerCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/spinner_background"
+                    android:spinnerMode="dialog" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextDescricao"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@drawable/edit_text"
-                android:padding="12dp"
-                android:inputType="textMultiLine"
-                android:gravity="top"
-                android:textColor="#2C3E50"
-                android:fontFamily="@font/poppins_regular" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <!-- BOTÃO GERAR COM IA (com Lottie animado ao lado) -->
+                <LinearLayout
+                    android:id="@+id/buttonGenerateAIContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/outlined_button_background"
+                    android:padding="8dp">
 
-        <TextView
-            android:id="@+id/textViewObservacoesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Observações"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottie_chatbot"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        app:lottie_rawRes="@raw/chatbot"
+                        app:lottie_loop="true"
+                        app:lottie_autoPlay="true" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutObservacoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="#40BCE2">
+                    <TextView
+                        android:id="@+id/buttonGenerateAI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gerar com IA"
+                        android:textColor="#40BCE2"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextObservacoes"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@drawable/edit_text"
-                android:padding="12dp"
-                android:inputType="textMultiLine"
-                android:gravity="top"
-                android:textColor="#2C3E50"
-                android:fontFamily="@font/poppins_regular" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <!-- TÍTULO (💡 Sugerido pela IA) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Título"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
 
-        <TextView
-            android:id="@+id/textViewPrioridade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Prioridade"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="Digite um titulo..."
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxStrokeColor="#80AEEEEE">
 
-        <Spinner
-            android:id="@+id/spinnerPrioridade"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:background="#e3e3e3" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextTitulo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textViewData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Data"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Selecione a data"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_calendar">
+                <!-- DESCRIÇÃO -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Descrição"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:clickable="true"
-                android:padding="12dp"
-                android:fontFamily="@font/poppins_regular" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="Digite uma descrição...">
 
-        <TextView
-            android:id="@+id/textViewAnexos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Anexos"
-            android:textColor="@color/darkgray"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins_bold" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDescricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:gravity="start">
+                <!-- OBSERVAÇÕES -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Observações"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
 
-            <ImageView
-                android:id="@+id/imageViewAnex"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginEnd="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/outline_attach_file_24"
-                android:contentDescription="Anexo" />
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="Digite qualquer observação...">
 
-            <ImageView
-                android:id="@+id/imageViewImage"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginEnd="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/baseline_image_24"
-                android:contentDescription="Imagem" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextObservacoes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/imageViewCam"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/baseline_camera_alt_24"
-                android:contentDescription="Câmera" />
-        </LinearLayout>
+                <!-- PRIORIDADE (💡 Sugerido pela IA) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Prioridade"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_send_animation"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            app:lottie_rawRes="@raw/send_animation"
-            app:lottie_autoPlay="false"
-            app:lottie_loop="false"
-            android:visibility="gone" />
+                <Spinner
+                    android:id="@+id/spinnerPrioridade"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/spinner_background"
+                    android:spinnerMode="dialog" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="54dp"
-            android:backgroundTint="#40BCE2"
-            android:text="Enviar"
-            android:textColor="#ffffff"
-            android:fontFamily="@font/poppins_regular" />
+                <!-- DATA -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Data"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="Selecionar data"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconMode="custom"
+                    app:endIconTint="@color/gray">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- ANEXOS -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Anexos"
+                    android:textColor="@color/darkgray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins_bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="start">
+
+                    <ImageView
+                        android:id="@+id/imageViewAnex"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:srcCompat="@drawable/outline_attach_file_24"
+                        android:contentDescription="Anexo" />
+
+                    <ImageView
+                        android:id="@+id/imageViewImage"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:srcCompat="@drawable/baseline_image_24"
+                        android:contentDescription="Imagem" />
+
+                    <ImageView
+                        android:id="@+id/imageViewCam"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:srcCompat="@drawable/baseline_camera_alt_24"
+                        android:contentDescription="Câmera" />
+                </LinearLayout>
+
+                <!-- BOTÃO ENVIAR -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSubmit"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="40dp"
+                    android:text="Enviar"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:backgroundTint="#40BCE2"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="12dp"
+                    app:elevation="4dp" />
+
+                <!-- ANIMAÇÃO DE ENVIO -->
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie_send_animation"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/loadingtriangle"/>
+
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </ScrollView>

@@ -1,6 +1,9 @@
 package com.example.helpdeskunipassismobile;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieDrawable;
 import com.example.helpdeskunipassismobile.api.ApiClient;
 import com.example.helpdeskunipassismobile.api.AuthApi;
 import com.example.helpdeskunipassismobile.model.FuncionarioEmpresa;
@@ -32,6 +36,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // ✅ Verifica se o usuário já está logado
+        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+        if (isLoggedIn) {
+            long idFuncionario = prefs.getLong("idFuncionario", -1);
+            if (idFuncionario != -1) {
+                // Pula a tela de login e vai direto pra Home
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        }
+
         // Inicializa Retrofit e AuthApi
         authApi = ApiClient.getRetrofit().create(AuthApi.class);
 
@@ -46,7 +64,37 @@ public class MainActivity extends AppCompatActivity {
         TextInputEditText editCpf = findViewById(R.id.editTextCpf);
         TextInputEditText editSenha = findViewById(R.id.editTextSenha);
         LottieAnimationView lottieLogin = findViewById(R.id.lottieLoading);
+        LottieAnimationView lottie = findViewById(R.id.lottieHome);
 
+        // Animações decorativas
+        lottie.setMinAndMaxFrame(0, 90);
+        lottie.setRepeatMode(LottieDrawable.REVERSE);
+        lottie.setRepeatCount(LottieDrawable.INFINITE);
+        lottie.setSpeed(0.1f);
+        lottie.playAnimation();
+
+        ValueAnimator alphaAnimator = ValueAnimator.ofFloat(0.09f, 0.4f);
+        alphaAnimator.setDuration(7000);
+        alphaAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        alphaAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        alphaAnimator.addUpdateListener(animation -> {
+            float value = (float) animation.getAnimatedValue();
+            lottie.setAlpha(value);
+        });
+        alphaAnimator.start();
+
+        ValueAnimator scaleAnimator = ValueAnimator.ofFloat(0.9f, 1.1f);
+        scaleAnimator.setDuration(9000);
+        scaleAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        scaleAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        scaleAnimator.addUpdateListener(animation -> {
+            float value = (float) animation.getAnimatedValue();
+            lottie.setScaleX(value);
+            lottie.setScaleY(value);
+        });
+        scaleAnimator.start();
+
+        // Botão de Login
         btnLogin.setOnClickListener(v -> {
             String inputCpf = editCpf.getText().toString().trim();
             String inputSenha = editSenha.getText().toString().trim();
@@ -62,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // Mostra loading
             btnLogin.setEnabled(false);
             btnLogin.setVisibility(View.GONE);
             btnAdmin.setVisibility(View.GONE);
@@ -82,14 +129,16 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         FuncionarioEmpresa funcionario = response.body();
 
-                        getSharedPreferences("user_prefs", MODE_PRIVATE)
-                                .edit()
-                                .putLong("idFuncionario", funcionario.getId())
-                                .apply();
+                        // ✅ Salva o estado de login
+                        SharedPreferences.Editor editor = getSharedPreferences("user_prefs", MODE_PRIVATE).edit();
+                        editor.putLong("idFuncionario", funcionario.getId());
+                        editor.putString("nomeFuncionario", funcionario.getNome());
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
 
                         Toast.makeText(MainActivity.this, "Bem-vindo, " + funcionario.getNome(), Toast.LENGTH_SHORT).show();
 
-                        // Redireciona para HomeActivity passando dados do funcionário
+                        // Vai para a Home
                         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                         intent.putExtra("nome", funcionario.getNome());
                         intent.putExtra("cpf", funcionario.getCpf());
@@ -97,15 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(MainActivity.this, "CPF ou senha incorretos", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        FuncionarioEmpresa funcionario = response.body();
-                        Log.d("LOGIN_API", "Login OK: " + funcionario.getNome() + ", CPF: " + funcionario.getCpf());
-                        Toast.makeText(MainActivity.this, "Bem-vindo, " + funcionario.getNome(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.e("LOGIN_API", "Falha no login: " + response.code() + " - " + response.message());
                         Toast.makeText(MainActivity.this, "CPF ou senha incorretos", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -119,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     btnAdmin.setVisibility(View.VISIBLE);
 
                     Toast.makeText(MainActivity.this, "Erro ao conectar: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
                     Log.e("LOGIN_API", "Erro na requisição: " + t.getMessage(), t);
-                    Toast.makeText(MainActivity.this, "Erro ao conectar: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });

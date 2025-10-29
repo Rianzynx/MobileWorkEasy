@@ -1,11 +1,25 @@
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
+val GROQ_API_KEY: String = localProperties.getProperty("GROQ_API_KEY") ?: ""
+
 android {
     namespace = "com.example.helpdeskunipassismobile"
     compileSdk = 34
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.helpdeskunipassismobile"
@@ -15,6 +29,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 🔹 Passa a chave para o BuildConfig.java
+        buildConfigField("String", "GROQ_API_KEY", "\"$GROQ_API_KEY\"")
     }
 
     buildTypes {
@@ -38,6 +55,8 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.recyclerview)
     implementation(libs.swiperefreshlayout)
+
+    implementation("com.google.code.gson:gson:2.10.1")
 
     // Animações
     implementation("com.airbnb.android:lottie:6.6.10")

@@ -16,7 +16,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.helpdeskunipassismobile.model.SolicitacaoDTO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +47,7 @@ public class ViewSolicitationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_view_solicitation);
 
-        // Inicialização das views
+        // 🔹 Inicializa todas as views primeiro
         recyclerView = findViewById(R.id.recyclerViewSolicitacoes);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         lottieEmpty = findViewById(R.id.lottieEmpty);
@@ -52,13 +55,13 @@ public class ViewSolicitationActivity extends BaseActivity {
         spinnerPrioridade = findViewById(R.id.spinnerPrioridade);
         editTextBusca = findViewById(R.id.editTextBusca);
 
+        // 🔹 Configura o RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Adapter e lista
         solicitacaoList = new ArrayList<>();
         adapter = new SolicitationAdapter(solicitacaoList);
         recyclerView.setAdapter(adapter);
 
+        // 🔹 Clique em um item → abre detalhes
         adapter.setOnItemClickListener(position -> {
             SolicitacaoDTO s = adapter.getItem(position);
             Intent intent = new Intent(ViewSolicitationActivity.this, SolicitationDetailActivity.class);
@@ -71,28 +74,32 @@ public class ViewSolicitationActivity extends BaseActivity {
             startActivity(intent);
         });
 
-        // Configuração dos filtros
+        // 🔹 Configura filtros
         configurarSpinners();
 
-        // Configuração do EditText de busca
+        // 🔹 Filtro por busca de texto
         editTextBusca.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 filtrarLista();
             }
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
-        // Pull to refresh
+        // 🔹 Swipe-to-refresh
         swipeRefreshLayout.setOnRefreshListener(this::carregarSolicitacoesDoServidor);
 
-        // Carrega os dados da API
-        carregarSolicitacoesDoServidor();
+        // 🔹 Carrega lista local ou servidor
+        solicitacaoList = carregarSolicitacoesLocalmente();
+
+        if (solicitacaoList.isEmpty()) {
+            carregarSolicitacoesDoServidor();
+        } else {
+            filtrarLista();
+        }
     }
 
+    // 🔸 Configura os Spinners de filtro
     private void configurarSpinners() {
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
@@ -123,8 +130,11 @@ public class ViewSolicitationActivity extends BaseActivity {
         });
     }
 
+    // 🔸 Busca dados no servidor
     private void carregarSolicitacoesDoServidor() {
-        swipeRefreshLayout.setRefreshing(true);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://web-production-c1372.up.railway.app/")
@@ -136,11 +146,15 @@ public class ViewSolicitationActivity extends BaseActivity {
         api.listarSolicitacoes().enqueue(new Callback<List<SolicitacaoDTO>>() {
             @Override
             public void onResponse(Call<List<SolicitacaoDTO>> call, Response<List<SolicitacaoDTO>> response) {
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
                 if (response.isSuccessful() && response.body() != null) {
                     solicitacaoList.clear();
                     solicitacaoList.addAll(response.body());
                     filtrarLista();
+                    salvarSolicitacoesLocalmente(response.body());
                 } else {
                     Toast.makeText(ViewSolicitationActivity.this,
                             "Falha ao carregar dados: " + response.code(),
@@ -150,7 +164,10 @@ public class ViewSolicitationActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<SolicitacaoDTO>> call, Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
                 Toast.makeText(ViewSolicitationActivity.this,
                         "Erro de rede: " + t.getMessage(),
                         Toast.LENGTH_SHORT).show();
@@ -158,13 +175,17 @@ public class ViewSolicitationActivity extends BaseActivity {
         });
     }
 
+    // 🔸 Filtro da lista
     private void filtrarLista() {
+        if (spinnerStatus == null || spinnerPrioridade == null) return;
+
         String statusFiltro = spinnerStatus.getSelectedItem().toString().trim().toLowerCase();
         String prioridadeFiltro = spinnerPrioridade.getSelectedItem().toString().trim().toLowerCase();
         String queryFiltro = editTextBusca.getText().toString().trim().toLowerCase();
 
         List<SolicitacaoDTO> filtradas = new ArrayList<>();
-        for (SolicitacaoDTO s : solicitacaoList) { // SEMPRE usa a lista original
+
+        for (SolicitacaoDTO s : solicitacaoList) {
             String statusItem = s.getStatus() != null ? s.getStatus().trim().toLowerCase() : "";
             String prioridadeItem = s.getPrioridade() != null ? s.getPrioridade().trim().toLowerCase() : "";
             String tituloItem = s.getTitulo() != null ? s.getTitulo().trim().toLowerCase() : "";
@@ -182,7 +203,7 @@ public class ViewSolicitationActivity extends BaseActivity {
         atualizarTextoVazio();
     }
 
-
+    // 🔸 Mostra animação se vazio
     private void atualizarTextoVazio() {
         boolean vazio = adapter.getItemCount() == 0;
 
@@ -194,5 +215,26 @@ public class ViewSolicitationActivity extends BaseActivity {
             lottieEmpty.animate().alpha(0f).setDuration(300).withEndAction(() ->
                     lottieEmpty.setVisibility(View.GONE)).start();
         }
+    }
+
+    // 🔸 Cache local
+    private void salvarSolicitacoesLocalmente(List<SolicitacaoDTO> lista) {
+        if (lista == null) return;
+        String json = new Gson().toJson(lista);
+        getSharedPreferences("solicitacoes_cache", MODE_PRIVATE)
+                .edit()
+                .putString("lista_solicitacoes", json)
+                .apply();
+    }
+
+    private List<SolicitacaoDTO> carregarSolicitacoesLocalmente() {
+        String json = getSharedPreferences("solicitacoes_cache", MODE_PRIVATE)
+                .getString("lista_solicitacoes", null);
+
+        if (json != null) {
+            Type type = new TypeToken<List<SolicitacaoDTO>>(){}.getType();
+            return new Gson().fromJson(json, type);
+        }
+        return new ArrayList<>();
     }
 }
