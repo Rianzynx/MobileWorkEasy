@@ -1,6 +1,7 @@
 package com.example.helpdeskunipassismobile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -99,6 +100,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             } else if (id == R.id.nav_logout) {
                 logout();
             }
+
+            // Novo grupo: abrir páginas externas
+            else if (id == R.id.nav_racismo) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://pt.wikipedia.org/wiki/Racismo")));
+            } else if (id == R.id.nav_empreendedorismo) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://pt.wikipedia.org/wiki/Empreendedorismo")));
+            } else if (id == R.id.nav_marketing) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://pt.wikipedia.org/wiki/Marketing")));
+            }
+
 
             drawerLayout.closeDrawers();
             return true;

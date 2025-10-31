@@ -137,6 +137,38 @@
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/loadingtriangle" />
 
+            <!-- Coloque isso dentro do LinearLayout principal, depois do Lottie de carregamento -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="16dp">
+
+                <!-- GitHub -->
+                <ImageView
+                    android:id="@+id/btnGithub"
+                    android:layout_width="30dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/ic_github"
+                    android:contentDescription="Login com GitHub"
+                    android:layout_marginEnd="24dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <!-- LinkedIn -->
+                <ImageView
+                    android:id="@+id/btnLinkedIn"
+                    android:layout_width="30dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/ic_linkedin"
+                    android:contentDescription="Login com LinkedIn"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -124,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Descrição detalhada da solicitação..."
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins_regular"
                         android:layout_marginBottom="16dp" />
@@ -147,7 +147,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nenhuma observação disponível"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins_regular"
                         android:layout_marginBottom="8dp" />
@@ -171,10 +171,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewAnexos"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
                 android:orientation="horizontal"
                 android:scrollbars="horizontal"
-                android:layout_marginBottom="24dp" />
+                android:visibility="gone"/>
 
             <!-- Botão -->
             <com.google.android.material.button.MaterialButton

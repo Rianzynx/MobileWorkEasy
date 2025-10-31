@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.helpdeskunipassismobile.model.SolicitacaoDTO;
+import com.example.helpdeskunipassismobile.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class SolicitationAdapter extends RecyclerView.Adapter<SolicitationAdapte
         // Protege contra null
         holder.titulo.setText(s.getTitulo() != null ? s.getTitulo() : "");
         holder.status.setText(s.getStatus() != null ? s.getStatus() : "");
-        holder.data.setText(s.getData() != null ? s.getData() : "");
+        holder.data.setText(DateUtils.formatarDataBR(s.getData()));
         holder.prioridade.setText(s.getPrioridade() != null ? s.getPrioridade() : "");
     }
 

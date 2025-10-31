@@ -57,7 +57,7 @@
             app:menu="@menu/drawer_menu"
             app:itemTextAppearance="@style/NavigationViewItemTextMenu"
             app:itemIconTint="@null"
-            app:itemTextColor="@color/white"
+            app:itemTextColor="@color/black"
             app:itemBackground="@android:color/transparent"
             android:paddingTop="0dp" />
 

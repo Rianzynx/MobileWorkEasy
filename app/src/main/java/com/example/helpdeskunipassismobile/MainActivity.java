@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AuthApi authApi;
 
+    private ImageView btnGithub, btnLinkedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
         // ✅ Verifica se o usuário já está logado
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        String nome = prefs.getString("nomeFuncionario", "Nome não definido");
+        String cpf = prefs.getString("cpfFuncionario", "CPF não definido");
+        String setor = prefs.getString("setorFuncionario", "");
+
         boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
         if (isLoggedIn) {
             long idFuncionario = prefs.getLong("idFuncionario", -1);
@@ -129,10 +137,19 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         FuncionarioEmpresa funcionario = response.body();
 
-                        // ✅ Salva o estado de login
+                        // Salva o estado de login e todos os dados
                         SharedPreferences.Editor editor = getSharedPreferences("user_prefs", MODE_PRIVATE).edit();
                         editor.putLong("idFuncionario", funcionario.getId());
                         editor.putString("nomeFuncionario", funcionario.getNome());
+                        editor.putString("cpfFuncionario", funcionario.getCpf());
+                        editor.putString("setorFuncionario", funcionario.getSetor());
+                        editor.putString("emailFuncionario", funcionario.getEmail());
+                        editor.putString("telefoneFuncionario", funcionario.getTelefone());
+                        // Se você tiver endereço, data de nascimento, admissão, status, também pode salvar aqui
+                        editor.putString("enderecoFuncionario", funcionario.getEndereco() != null ? funcionario.getEndereco() : "");
+                        editor.putString("dataNascimentoFuncionario", funcionario.getDataNascimento() != null ? funcionario.getDataNascimento() : "");
+                        editor.putString("dataAdmissaoFuncionario", funcionario.getDataAdmissao() != null ? funcionario.getDataAdmissao() : "");
+                        editor.putString("statusFuncionario", funcionario.getStatusFuncionario() != null ? funcionario.getStatusFuncionario() : "");
                         editor.putBoolean("isLoggedIn", true);
                         editor.apply();
 
@@ -168,6 +185,23 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
+        });
+
+        btnGithub = findViewById(R.id.btnGithub);
+        btnLinkedIn = findViewById(R.id.btnLinkedIn);
+
+        btnGithub.setOnClickListener(v -> {
+            String url = "https://github.com/Rianzynx/MobileWorkEasy";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        });
+
+        btnLinkedIn.setOnClickListener(v -> {
+            String url = "https://www.linkedin.com/in/rian-alves/";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
         });
     }
 }

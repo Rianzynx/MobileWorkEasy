@@ -1,14 +1,16 @@
 package com.example.helpdeskunipassismobile;
 
 import android.animation.Animator;
-import android.app.DatePickerDialog;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -18,13 +20,11 @@ import com.example.helpdeskunipassismobile.network.GroqService;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,14 +36,12 @@ public class NewSolicitationActivity extends BaseActivity {
 
     private Spinner spinnerPrioridade;
     private Spinner spinnerCategoria;
-    private EditText textDate;
     private EditText editTextTitulo;
     private EditText editTextDescricao;
     private EditText editTextObservacoes;
     private MaterialButton buttonSubmit;
-    private LottieAnimationView lottieSendAnimation;
     private LinearLayout buttonGenerateAIContainer;
-    private LottieAnimationView lottieChatbot;
+    private LottieAnimationView lottieChatbot, lottieSendAnimation;
 
     private Long idFuncionarioLogado;
 
@@ -52,178 +50,202 @@ public class NewSolicitationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_new_solicitation);
 
-        // Referências
         spinnerPrioridade = findViewById(R.id.spinnerPrioridade);
         spinnerCategoria = findViewById(R.id.spinnerCategoria);
-        textDate = findViewById(R.id.textDate);
         editTextTitulo = findViewById(R.id.editTextTitulo);
         editTextDescricao = findViewById(R.id.editTextDescricao);
         editTextObservacoes = findViewById(R.id.editTextObservacoes);
         buttonSubmit = findViewById(R.id.buttonSubmit);
-        lottieSendAnimation = findViewById(R.id.lottie_send_animation);
         buttonGenerateAIContainer = findViewById(R.id.buttonGenerateAIContainer);
         lottieChatbot = findViewById(R.id.lottie_chatbot);
+        lottieSendAnimation = findViewById(R.id.lottie_send_animation);
 
         // Usuário logado
         SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
         idFuncionarioLogado = prefs.getLong("idFuncionario", -1);
         if (idFuncionarioLogado == -1) {
             Toast.makeText(this, "Erro: usuário não logado", Toast.LENGTH_SHORT).show();
-            finish();
             return;
         }
 
         // Spinner Prioridade
         List<String> priorityOptions = Arrays.asList("🟢 Baixa", "🟡 Média", "🔴 Alta");
-        CustomSpinnerAdapter priorityAdapter = new CustomSpinnerAdapter(this, priorityOptions);
-        spinnerPrioridade.setAdapter(priorityAdapter);
-        spinnerPrioridade.setSelection(0);
+        spinnerPrioridade.setAdapter(new CustomSpinnerAdapter(this, priorityOptions));
 
         // Spinner Categoria
         List<String> categoryOptions = Arrays.asList(
                 "Folha de Pagamento", "Benefícios", "Recrutamento",
                 "Treinamento", "Férias", "Outros"
         );
-        CustomSpinnerAdapter categoryAdapter = new CustomSpinnerAdapter(this, categoryOptions);
-        spinnerCategoria.setAdapter(categoryAdapter);
-        spinnerCategoria.setSelection(0);
+        spinnerCategoria.setAdapter(new CustomSpinnerAdapter(this, categoryOptions));
 
-        // DatePicker
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String currentDate = sdf.format(Calendar.getInstance().getTime());
-        textDate.setText(currentDate);
-        textDate.setOnClickListener(v -> {
-            final Calendar calendar = Calendar.getInstance();
-            DatePickerDialog datePickerDialog = new DatePickerDialog(NewSolicitationActivity.this,
-                    (view, year, month, dayOfMonth) -> {
-                        calendar.set(year, month, dayOfMonth);
-                        textDate.setText(sdf.format(calendar.getTime()));
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show();
-        });
-
+        // Botão "Gerar com IA"
         buttonGenerateAIContainer.setOnClickListener(v -> {
-            lottieChatbot.playAnimation();
-            abrirDialogoIA();
-        });
-
-
-        buttonSubmit.setOnClickListener(v -> enviarFormulario());
-    }
-
-    private void abrirDialogoIA() {
-        // Cria uma caixa de diálogo para o usuário escrever a introdução
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Gerar com IA");
-
-        // Campo de texto para o usuário
-        final EditText input = new EditText(this);
-        input.setHint("Descreva brevemente o que você precisa (ex: erro no pagamento, dúvida sobre férias...)");
-        input.setPadding(50, 30, 50, 30);
-        builder.setView(input);
-
-        builder.setPositiveButton("Gerar", (dialog, which) -> {
-            String introducao = input.getText().toString().trim();
-            if (introducao.isEmpty()) {
-                Toast.makeText(this, "Por favor, insira uma introdução.", Toast.LENGTH_SHORT).show();
+            String titulo = editTextTitulo.getText().toString().trim();
+            if (titulo.isEmpty()) {
+                Toast.makeText(this, "Digite um título antes de gerar com IA.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             lottieChatbot.playAnimation();
-            gerarTextoComIA(introducao);
+            abrirDialogoIAComPerguntas(titulo);
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
-        builder.show();
+        // Botão de envio
+        buttonSubmit.setOnClickListener(v -> enviarFormulario());
+    }
+    private void abrirDialogoIAComPerguntas(String titulo) {
+        gerarPerguntasIA(titulo, perguntas -> runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Responda para gerar automaticamente");
+
+            View dialogView = getLayoutInflater().inflate(R.layout.dialogue_perguntas_ia, null);
+            LinearLayout containerPerguntas = dialogView.findViewById(R.id.containerPerguntas);
+            builder.setView(dialogView);
+
+            List<EditText> respostasEditTexts = new ArrayList<>();
+
+            for (String pergunta : perguntas) {
+                TextView tvPergunta = new TextView(this);
+                tvPergunta.setText(pergunta);
+                tvPergunta.setPadding(0, 16, 0, 8);
+                tvPergunta.setTextSize(16f);
+                containerPerguntas.addView(tvPergunta);
+
+                EditText etResposta = new EditText(this);
+                etResposta.setHint("Digite sua resposta");
+                containerPerguntas.addView(etResposta);
+                respostasEditTexts.add(etResposta);
+            }
+
+            builder.setPositiveButton("Gerar", null);
+            builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                List<String> respostas = new ArrayList<>();
+                for (EditText et : respostasEditTexts) {
+                    String r = et.getText().toString().trim();
+                    if (r.isEmpty()) {
+                        Toast.makeText(this, "Responda todas as perguntas.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    respostas.add(r);
+                }
+                dialog.dismiss();
+                lottieChatbot.playAnimation();
+                String contexto = "Título: " + titulo + "\nRespostas: " + String.join(". ", respostas);
+                gerarDescricaoCompletaIA(contexto);
+            });
+        }));
     }
 
-
-    private void gerarTextoComIA(String introducaoUsuario) {
-        String categoria = spinnerCategoria.getSelectedItem().toString();
-        String prioridade = spinnerPrioridade.getSelectedItem().toString();
+    private void gerarPerguntasIA(String titulo, Consumer<List<String>> callback) {
+        String prompt = "Gere 3 perguntas curtas que ajudem a entender melhor a solicitação com o título: \"" +
+                titulo + "\". Retorne apenas as perguntas, uma por linha, sem numeração ou explicações.";
 
         GroqService groqService = GroqClient.getGroqService();
-
-        String prompt =
-                "Você é um colaborador humano escrevendo uma solicitação para o RH. " +
-                        "Com base na seguinte introdução do usuário: \"" + introducaoUsuario + "\", " +
-                        "redija a solicitação como se fosse o próprio colaborador, " +
-                        "de forma natural, respeitosa, direta e sem muita formalidade. " +
-                        "A solicitação deve conter:\n" +
-                        "- Um TÍTULO breve e claro.\n" +
-                        "- Uma DESCRIÇÃO detalhada(porém sem extender), escrita em primeira pessoa (ex: 'Percebi que...', 'Gostaria de...').\n" +
-                        "- Uma OBSERVAÇÃO curta (ex: 'Agradeço a atenção', 'Fico no aguardo', etc.).\n\n" +
-                        "Importante: NÃO use Markdown, asteriscos (**), emojis, aspas ou negrito. " +
-                        "Responda apenas com texto puro neste formato exato:\n\n" +
-                        "Título: ...\nDescrição: ...\nObservação: ...";
-
-
 
         Map<String, Object> request = new HashMap<>();
         request.put("model", "llama-3.1-8b-instant");
 
-        Map<String, String> message = new HashMap<>();
+        Map<String, Object> message = new HashMap<>();
         message.put("role", "user");
         message.put("content", prompt);
-
         request.put("messages", Collections.singletonList(message));
 
         groqService.generateText(request).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                lottieChatbot.pauseAnimation();
-
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        Map<String, Object> choices = ((List<Map<String, Object>>) response.body().get("choices")).get(0);
-                        Map<String, String> messageResp = (Map<String, String>) choices.get("message");
-                        String resposta = messageResp.get("content");
+                        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.body().get("choices");
+                        Map<String, Object> messageObj = (Map<String, Object>) choices.get(0).get("message");
+                        String content = messageObj.get("content").toString();
 
-                        // Extrai Título / Descrição / Observação
-                        String titulo = "", descricao = "", observacao = "";
+                        List<String> perguntas = Arrays.stream(content.split("\n"))
+                                .map(String::trim)
+                                .filter(s -> !s.isEmpty())
+                                .collect(Collectors.toList());
 
-                        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-                                "(?i)t[ií]tulo[:：]?\\s*(.*?)\\s*(?:descri[cç][aã]o[:：]?\\s*(.*?)\\s*(?:observa[cç][aã]o(?:es)?[:：]?\\s*(.*))?)?$",
-                                java.util.regex.Pattern.DOTALL
-                        );
-                        java.util.regex.Matcher matcher = pattern.matcher(resposta);
-
-                        if (matcher.find()) {
-                            titulo = matcher.group(1) != null ? matcher.group(1).trim() : "";
-                            descricao = matcher.group(2) != null ? matcher.group(2).trim() : "";
-                            observacao = matcher.group(3) != null ? matcher.group(3).trim() : "";
-                        }
-
-                        editTextTitulo.setText(titulo);
-                        editTextDescricao.setText(descricao);
-                        editTextObservacoes.setText(observacao);
-
+                        callback.accept(perguntas);
                     } catch (Exception e) {
-                        Toast.makeText(NewSolicitationActivity.this, "Erro ao interpretar resposta da IA", Toast.LENGTH_SHORT).show();
+                        Log.e("IA", "Erro ao processar perguntas: " + e.getMessage());
                     }
-                } else {
-                    String erro = "Erro: " + response.code();
-                    if (response.errorBody() != null) {
-                        try {
-                            erro += " - " + response.errorBody().string();
-                        } catch (Exception ignored) {}
-                    }
-                    Toast.makeText(NewSolicitationActivity.this, erro, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-                lottieChatbot.pauseAnimation();
-                Toast.makeText(NewSolicitationActivity.this, "Erro: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("IA", "Erro ao gerar perguntas: " + t.getMessage());
             }
         });
     }
 
+    private void gerarDescricaoCompletaIA(String contexto) {
+        GroqService groqService = GroqClient.getGroqService();
 
+        String prompt = "Você é um colaborador (funcionário) de uma empresa.\n" +
+                "Seu objetivo é comunicar ao RH, de forma clara e educada, informações importantes sobre sua atividade ou situação.\n\n" +
+                "Com base nas informações abaixo, gere:\n" +
+                "1. Um TÍTULO breve e claro.\n" +
+                "2. Uma DESCRIÇÃO em primeira pessoa direcionada ao RH.\n" +
+                "3. Uma OBSERVAÇÃO curta e educada.\n\n" +
+                contexto +
+                "\n\nResponda exatamente neste formato:\n" +
+                "Título: ...\n" +
+                "Descrição: ...\n" +
+                "Observação: ...";
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("model", "llama-3.1-8b-instant");
+        Map<String, Object> message = new HashMap<>();
+        message.put("role", "user");
+        message.put("content", prompt);
+        request.put("messages", Collections.singletonList(message));
+
+        groqService.generateText(request).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                runOnUiThread(() -> lottieChatbot.pauseAnimation());
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.body().get("choices");
+                        Map<String, Object> messageObj = (Map<String, Object>) choices.get(0).get("message");
+                        String content = messageObj.get("content").toString();
+
+                        Pattern pattern = Pattern.compile(
+                                "(?i)t[ií]tulo[:：]?\\s*(.*?)\\s*(?:descri[cç][aã]o[:：]?\\s*(.*?)\\s*(?:observa[cç][aã]o(?:es)?[:：]?\\s*(.*))?)?$",
+                                Pattern.DOTALL
+                        );
+                        Matcher matcher = pattern.matcher(content);
+
+                        if (matcher.find()) {
+                            editTextTitulo.setText(matcher.group(1).trim());
+                            editTextDescricao.setText(matcher.group(2).trim());
+                            editTextObservacoes.setText(matcher.group(3).trim());
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(NewSolicitationActivity.this, "Erro ao interpretar resposta da IA", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(NewSolicitationActivity.this, "Erro ao gerar texto com IA", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                runOnUiThread(() -> {
+                    lottieChatbot.pauseAnimation();
+                    Toast.makeText(NewSolicitationActivity.this, "Erro de conexão: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
+    /**
+     * 4️⃣ Envio do formulário
+     */
     private void enviarFormulario() {
         String titulo = editTextTitulo.getText().toString().trim();
         String descricao = editTextDescricao.getText().toString().trim();
@@ -231,10 +253,12 @@ public class NewSolicitationActivity extends BaseActivity {
         String categoria = spinnerCategoria.getSelectedItem().toString();
         String prioridadeRaw = spinnerPrioridade.getSelectedItem().toString();
         String prioridade = prioridadeRaw.substring(prioridadeRaw.indexOf(' ') + 1);
-        String data = textDate.getText().toString().trim();
 
         if (titulo.isEmpty()) { editTextTitulo.setError("Título é obrigatório"); return; }
         if (descricao.isEmpty()) { editTextDescricao.setError("Descrição é obrigatória"); return; }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        String dataAtual = sdf.format(Calendar.getInstance().getTime());
 
         SolicitacaoDTO dto = new SolicitacaoDTO();
         dto.setTitulo(titulo);
@@ -243,7 +267,7 @@ public class NewSolicitationActivity extends BaseActivity {
         dto.setCategoria(categoria);
         dto.setPrioridade(prioridade);
         dto.setStatus("Pendente");
-        dto.setData(data);
+        dto.setData(dataAtual);
         dto.setIdFuncionario(idFuncionarioLogado);
 
         buttonSubmit.setVisibility(View.GONE);
@@ -280,6 +304,7 @@ public class NewSolicitationActivity extends BaseActivity {
                     intent.putExtra("prioridade", dto.getPrioridade());
                     intent.putExtra("categoria", dto.getCategoria());
                     intent.putExtra("descricao", dto.getDescricao());
+                    intent.putExtra("observacoes", dto.getObservacoes());
                     startActivity(intent);
                 } else {
                     Toast.makeText(NewSolicitationActivity.this, "Falha: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -292,12 +317,5 @@ public class NewSolicitationActivity extends BaseActivity {
                 Toast.makeText(NewSolicitationActivity.this, "Erro: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String extrairEntre(String texto, String inicio, String fim) {
-        int i1 = texto.indexOf(inicio);
-        int i2 = texto.indexOf(fim);
-        if (i1 == -1 || i2 == -1) return "";
-        return texto.substring(i1 + inicio.length(), i2).trim();
     }
 }

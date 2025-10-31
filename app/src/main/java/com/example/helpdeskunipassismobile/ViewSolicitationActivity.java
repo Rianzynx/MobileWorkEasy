@@ -16,12 +16,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.helpdeskunipassismobile.model.SolicitacaoDTO;
+import com.example.helpdeskunipassismobile.utils.DateUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +40,11 @@ public class ViewSolicitationActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SolicitationAdapter adapter;
-    private List<SolicitacaoDTO> solicitacaoList;
+    private static List<SolicitacaoDTO> solicitacaoList = new ArrayList<>();
+
+    public static List<SolicitacaoDTO> getListaSolicitacoes() {
+        return solicitacaoList;
+    }
 
     private LottieAnimationView lottieEmpty;
     private Spinner spinnerStatus, spinnerPrioridade;
@@ -47,7 +57,6 @@ public class ViewSolicitationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_view_solicitation);
 
-        // 🔹 Inicializa todas as views primeiro
         recyclerView = findViewById(R.id.recyclerViewSolicitacoes);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         lottieEmpty = findViewById(R.id.lottieEmpty);
@@ -55,51 +64,43 @@ public class ViewSolicitationActivity extends BaseActivity {
         spinnerPrioridade = findViewById(R.id.spinnerPrioridade);
         editTextBusca = findViewById(R.id.editTextBusca);
 
-        // 🔹 Configura o RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         solicitacaoList = new ArrayList<>();
         adapter = new SolicitationAdapter(solicitacaoList);
         recyclerView.setAdapter(adapter);
 
-        // 🔹 Clique em um item → abre detalhes
         adapter.setOnItemClickListener(position -> {
             SolicitacaoDTO s = adapter.getItem(position);
             Intent intent = new Intent(ViewSolicitationActivity.this, SolicitationDetailActivity.class);
             intent.putExtra("titulo", s.getTitulo());
             intent.putExtra("status", s.getStatus());
-            intent.putExtra("data", s.getData());
+            intent.putExtra("data", DateUtils.formatarDataBR(s.getData()));
             intent.putExtra("prioridade", s.getPrioridade());
             intent.putExtra("categoria", s.getCategoria());
             intent.putExtra("descricao", s.getDescricao());
+            intent.putExtra("observacoes", s.getObservacoes());
             startActivity(intent);
         });
 
-        // 🔹 Configura filtros
         configurarSpinners();
 
-        // 🔹 Filtro por busca de texto
         editTextBusca.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtrarLista();
-            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { filtrarLista(); }
             @Override public void afterTextChanged(Editable s) {}
         });
 
-        // 🔹 Swipe-to-refresh
         swipeRefreshLayout.setOnRefreshListener(this::carregarSolicitacoesDoServidor);
 
-        // 🔹 Carrega lista local ou servidor
         solicitacaoList = carregarSolicitacoesLocalmente();
+        ordenarPorDataHora(solicitacaoList);
+        filtrarLista();
 
         if (solicitacaoList.isEmpty()) {
             carregarSolicitacoesDoServidor();
-        } else {
-            filtrarLista();
         }
     }
 
-    // 🔸 Configura os Spinners de filtro
     private void configurarSpinners() {
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
@@ -114,27 +115,18 @@ public class ViewSolicitationActivity extends BaseActivity {
         spinnerPrioridade.setAdapter(prioridadeAdapter);
 
         spinnerStatus.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                filtrarLista();
-            }
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) { filtrarLista(); }
             @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
         spinnerPrioridade.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                filtrarLista();
-            }
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) { filtrarLista(); }
             @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
     }
 
-    // 🔸 Busca dados no servidor
     private void carregarSolicitacoesDoServidor() {
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(true);
-        }
+        if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(true);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://web-production-c1372.up.railway.app/")
@@ -146,13 +138,12 @@ public class ViewSolicitationActivity extends BaseActivity {
         api.listarSolicitacoes().enqueue(new Callback<List<SolicitacaoDTO>>() {
             @Override
             public void onResponse(Call<List<SolicitacaoDTO>> call, Response<List<SolicitacaoDTO>> response) {
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
                     solicitacaoList.clear();
                     solicitacaoList.addAll(response.body());
+                    ordenarPorDataHora(solicitacaoList);
                     filtrarLista();
                     salvarSolicitacoesLocalmente(response.body());
                 } else {
@@ -164,10 +155,7 @@ public class ViewSolicitationActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<List<SolicitacaoDTO>> call, Throwable t) {
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
+                if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(ViewSolicitationActivity.this,
                         "Erro de rede: " + t.getMessage(),
                         Toast.LENGTH_SHORT).show();
@@ -175,7 +163,6 @@ public class ViewSolicitationActivity extends BaseActivity {
         });
     }
 
-    // 🔸 Filtro da lista
     private void filtrarLista() {
         if (spinnerStatus == null || spinnerPrioridade == null) return;
 
@@ -199,11 +186,11 @@ public class ViewSolicitationActivity extends BaseActivity {
             }
         }
 
+        ordenarPorDataHora(filtradas);
         adapter.updateList(filtradas);
         atualizarTextoVazio();
     }
 
-    // 🔸 Mostra animação se vazio
     private void atualizarTextoVazio() {
         boolean vazio = adapter.getItemCount() == 0;
 
@@ -217,7 +204,6 @@ public class ViewSolicitationActivity extends BaseActivity {
         }
     }
 
-    // 🔸 Cache local
     private void salvarSolicitacoesLocalmente(List<SolicitacaoDTO> lista) {
         if (lista == null) return;
         String json = new Gson().toJson(lista);
@@ -236,5 +222,23 @@ public class ViewSolicitationActivity extends BaseActivity {
             return new Gson().fromJson(json, type);
         }
         return new ArrayList<>();
+    }
+
+    // 🔹 Ordena a lista do mais recente para o mais antigo
+    private void ordenarPorDataHora(List<SolicitacaoDTO> lista) {
+        Collections.sort(lista, new Comparator<SolicitacaoDTO>() {
+            @Override
+            public int compare(SolicitacaoDTO s1, SolicitacaoDTO s2) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                    Date d1 = sdf.parse(s1.getData());
+                    Date d2 = sdf.parse(s2.getData());
+                    return d2.compareTo(d1); // mais recente primeiro
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
     }
 }

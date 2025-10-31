@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:id="@+id/group_space" android:checkableBehavior="single">
+    </group>
 
     <!-- Grupo principal -->
     <group android:id="@+id/group_main" android:checkableBehavior="single">
@@ -18,7 +20,6 @@
             android:icon="@drawable/ic_view"/>
     </group>
 
-
     <!-- Grupo secundário -->
     <group android:id="@+id/group_secondary" android:checkableBehavior="single">
         <item
@@ -35,12 +36,28 @@
             android:icon="@drawable/ic_help"/>
     </group>
 
+    <!-- Grupo educacional -->
+    <group android:id="@+id/group_educational" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_racismo"
+            android:title="Racismo"
+            android:icon="@drawable/ic_racismo"/>
+        <item
+            android:id="@+id/nav_empreendedorismo"
+            android:title="Empreendedorismo"
+            android:icon="@drawable/ic_empreendedorismo"/>
+        <item
+            android:id="@+id/nav_marketing"
+            android:title="Feedback"
+            android:icon="@drawable/ic_marketing"/>
+    </group>
+
     <!-- Grupo de saída -->
     <group android:id="@+id/group_tertiary" android:checkableBehavior="none">
         <item
             android:id="@+id/nav_logout"
             android:title="Sair"
-            android:icon="@drawable/ic_view"/>
+            android:icon="@drawable/ic_arrow_back"/>
     </group>
 
 </menu>

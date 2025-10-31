@@ -1,191 +1,225 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F0"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:padding="0dp"
+    android:scrollbars="none">
 
-    <!-- Imagem do usuário -->
-
-    <TextView
-        android:id="@+id/txtPerfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Perfil"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageUser"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/rosto_exemplo"
-        app:shapeAppearanceOverlay="@style/CircularImage"
-        app:strokeColor="@android:color/white"
-        app:strokeWidth="4dp"
-        android:scaleType="centerCrop" />
-
-
-    <!-- Nome -->
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="Rian Alves"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imageUser"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Cargo -->
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Suporte"
-        android:textColor="#666"
-        android:textSize="16sp"
-        android:fontFamily="@font/poppins_regular"
-        app:layout_constraintTop_toBottomOf="@id/textView6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Container dos campos -->
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="#E0E0E0"
-        android:backgroundTint="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/textView7"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:background="#F0F0F0"
             android:padding="16dp">
 
-            <!-- Título -->
+            <!-- Imagem do usuário -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageUser"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/rosto_exemplo"
+                app:shapeAppearanceOverlay="@style/CircularImage"
+                app:strokeColor="@android:color/white"
+                app:strokeWidth="4dp"
+                android:scaleType="centerCrop" />
+
+            <!-- Nome -->
             <TextView
+                android:id="@+id/textNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Informações pessoais"
-                android:textColor="#0B0B0B"
+                android:layout_marginTop="12dp"
+                android:text="Rian Alves"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:fontFamily="@font/poppins_bold"
-                android:layout_marginBottom="12dp"/>
+                android:fontFamily="@font/poppins_medium"
+                app:layout_constraintTop_toBottomOf="@id/imageUser"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- E-mail -->
+            <!-- Cargo -->
             <TextView
+                android:id="@+id/textSetor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="E-mail"
+                android:layout_marginTop="4dp"
+                android:text="Suporte"
                 android:textColor="#666"
-                android:textStyle="bold"
-                android:fontFamily="@font/poppins_regular"/>
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_regular"
+                app:layout_constraintTop_toBottomOf="@id/textNome"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextEmail"
+            <!-- Card com informações -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="rian@yahoo.com"
-                android:enabled="false"
-                android:focusable="false"
-                android:cursorVisible="false"
-                android:textColor="@color/black"
-                android:backgroundTint="#D1D1D1"
-                android:fontFamily="@font/poppins_regular"/>
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/textSetor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Endereço -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Endereço"
-                android:textColor="#666"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/poppins_regular"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:lineSpacingExtra="4dp">
 
-            <EditText
-                android:id="@+id/editTextEndereco"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Rua A, 123"
-                android:enabled="false"
-                android:focusable="false"
-                android:cursorVisible="false"
-                android:textColor="@color/black"
-                android:backgroundTint="#D1D1D1"
-                android:fontFamily="@font/poppins_regular"/>
+                    <!-- Título -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Informações Pessoais"
+                        android:textColor="#0B0B0B"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold"
+                        android:layout_marginBottom="16dp"/>
 
-            <!-- Telefone -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Telefone"
-                android:textColor="#666"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/poppins_regular"/>
+                    <!-- CPF -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CPF"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textCPF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="468.000.000-00"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
 
-            <EditText
-                android:id="@+id/editTextTelefone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="(14) 99800-0000"
-                android:enabled="false"
-                android:focusable="false"
-                android:cursorVisible="false"
-                android:textColor="@color/black"
-                android:backgroundTint="#D1D1D1"
-                android:fontFamily="@font/poppins_regular"/>
+                    <!-- E-mail -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="E-mail"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="rian@yahoo.com"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
 
-            <!-- Data de nascimento -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Data de Nascimento"
-                android:textColor="#666"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/poppins_regular"/>
+                    <!-- Telefone -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Telefone"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textTelefone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="(14) 99800-0000"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
 
-            <EditText
-                android:id="@+id/editTextDataNascimento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="01/01/2001"
-                android:enabled="false"
-                android:focusable="false"
-                android:cursorVisible="false"
-                android:textColor="@color/black"
-                android:backgroundTint="#D1D1D1"
-                android:fontFamily="@font/poppins_regular"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                    <!-- Endereço -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Endereço"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textEndereco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Rua A, 123"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
 
+                    <!-- Data de nascimento -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Data de Nascimento"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textDataNascimento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="01/01/2001"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Data de admissão -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Data de Admissão"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textDataAdmissao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="01/01/2020"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
+
+                    <!-- Status do colaborador -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status do Colaborador"
+                        android:textColor="#666"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <TextView
+                        android:id="@+id/textStatusColaborador"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ativo"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_marginBottom="12dp"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</ScrollView>

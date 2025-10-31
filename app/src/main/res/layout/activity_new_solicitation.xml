@@ -64,35 +64,6 @@
                     android:background="@drawable/spinner_background"
                     android:spinnerMode="dialog" />
 
-                <!-- BOTÃO GERAR COM IA (com Lottie animado ao lado) -->
-                <LinearLayout
-                    android:id="@+id/buttonGenerateAIContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/outlined_button_background"
-                    android:padding="8dp">
-
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/lottie_chatbot"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        app:lottie_rawRes="@raw/chatbot"
-                        app:lottie_loop="true"
-                        app:lottie_autoPlay="true" />
-
-                    <TextView
-                        android:id="@+id/buttonGenerateAI"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Gerar com IA"
-                        android:textColor="#40BCE2"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/poppins_semi_bold"
-                        android:layout_marginStart="8dp" />
-                </LinearLayout>
 
                 <!-- TÍTULO (💡 Sugerido pela IA) -->
                 <TextView
@@ -126,6 +97,37 @@
                         android:textSize="14sp"
                         android:textColor="@color/black" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- BOTÃO GERAR COM IA (com Lottie animado ao lado) -->
+                <LinearLayout
+                    android:id="@+id/buttonGenerateAIContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/outlined_button_background"
+                    android:padding="8dp">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottie_chatbot"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        app:lottie_rawRes="@raw/chatbot"
+                        app:lottie_loop="true"
+                        app:lottie_autoPlay="true" />
+
+                    <TextView
+                        android:id="@+id/buttonGenerateAI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gerar com IA"
+                        android:textColor="#40BCE2"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
 
 
                 <!-- DESCRIÇÃO -->
@@ -205,37 +207,6 @@
                     android:background="@drawable/spinner_background"
                     android:spinnerMode="dialog" />
 
-                <!-- DATA -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Data"
-                    android:textColor="@color/darkgray"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/poppins_bold" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="Selecionar data"
-                    app:endIconDrawable="@drawable/ic_calendar"
-                    app:endIconMode="custom"
-                    app:endIconTint="@color/gray">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:clickable="true"
-                        android:fontFamily="@font/poppins_regular"
-                        android:textSize="14sp"
-                        android:textColor="@color/black" />
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- ANEXOS -->
                 <TextView
@@ -310,7 +281,7 @@
                     android:visibility="gone"
                     app:lottie_autoPlay="false"
                     app:lottie_loop="false"
-                    app:lottie_rawRes="@raw/loadingtriangle"/>
+                    app:lottie_rawRes="@raw/send_animation"/>
 
 
             </LinearLayout>
